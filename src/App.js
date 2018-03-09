@@ -1,11 +1,15 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+// ROUTES
+import { Journeys } from './Containers/Journeys';
+
+
 export default class App extends React.Component {
   render() {
     return (
       <View id={'webRoot'} style={styles.container}>
-        <Text>Something else</Text>
+        <Journeys style={{flex: 1}}/>
       </View>
     );
   }
