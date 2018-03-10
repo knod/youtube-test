@@ -11,7 +11,7 @@ export default class App extends React.Component {
   render() {
     return (
       <View id={'webRoot'} style={styles.container}>
-        <JourneyManager path={'something'} style={{ flex: 1 }} />
+        <JourneyManager path={'something'}/>
       </View>
     );
   }

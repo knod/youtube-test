@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import {  Animated, WebView, View, Dimensions, Text } from 'react-native';
+import {  Animated, WebView, View, Dimensions, Text, TouchableOpacity } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
-
 
   
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
@@ -16,18 +15,28 @@ const styles = {
 
 class JourneyManager extends Component {
 
+    state = { entries: [{color: 'blue'}, {color: 'green'}, {color: 'teal'}], one: null, two: null, three: null }
 
-
-    state = { entries: [{color: 'blue'}, {color: 'green'}, {color: 'teal'}] }
+    updateSlides = () => {
+      this.state.entries.shift();
+      this.state.entries.push({color: 'red'})
+    }
 
     _renderItem = ({item, index}) => {
 
-        var style = {...styles.vid, backgroundColor: item.color}
+        var style   = {...styles.vid, backgroundColor: item.color},
+            onPress = function () {};
+
+        if ( item.color === 'teal' ) {
+          onPress = this.updateSlides;
+        }
+
+        var thing = <TouchableOpacity style={style} onPress={onPress}>
+                <Text>{ viewportWidth }</Text>
+            </TouchableOpacity>
 
         return (
-            <View style={style}>
-                <Text>{ viewportWidth }</Text>
-            </View>
+            thing
         );
     }
 
