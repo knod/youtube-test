@@ -43,6 +43,7 @@ class JourneyManager extends Component {
     render () {
         return (
             <Carousel
+              loop={true}
               ref={(c) => { this._carousel = c; }}
               data={this.state.entries}
               renderItem={this._renderItem}
