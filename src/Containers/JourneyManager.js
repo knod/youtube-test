@@ -1,58 +1,125 @@
 import React, { Component } from 'react';
-import {  Animated, WebView, View, Dimensions, Text, TouchableOpacity } from 'react-native';
+import {  Animated, WebView, View, Dimensions, Text, TouchableOpacity, FlatList, PanResponder } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 
-  
-const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
+// UTILS
+import { modulo } from '../utils/math';
+
+
+var count = 0;
+const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window'),
+        halfWidth   = viewportWidth/2,
+        halfHeight  = viewportHeight/2;
 
 const styles = {
-    // container:  { width: 200, height: 200, display: 'flex', flexDirection: 'row', overflow: 'scroll' },
-    vid:        { width: viewportWidth, height: viewportHeight - 20, marginTop: 20 },
-    // left:       { backgroundColor: 'green', top: 0, left: -200 },
-    // center:     { backgroundColor: 'teal', top: 0, left: 0 },
-    // right:      { backgroundColor: 'blue', top: 0, left: 200 }
+    vid:        { width: viewportWidth, height: viewportHeight - 20, marginTop: 20, position: 'absolute' },
+    left:       { top: -1 * halfHeight, left: -3 * halfWidth },
+    center:     { top: -1 * halfHeight, left: -1 * halfWidth },
+    right:      { top: -1 * halfHeight, left: 3 * halfWidth }
 };
 
+var indexToPos = {
+    0: 'left',
+    1: 'center',
+    2: 'right'
+};
+
+
+class JourneyVid extends Component {
+    render () {
+        count++
+        var posKey  = indexToPos[ this.props.index ],
+            color   = this.props.color || 'red';
+
+        var style = {...styles.vid, ...styles[ posKey ], backgroundColor: color}
+        return (
+            <Animated.View style={style}>
+                <Text>{ count }</Text>
+            </Animated.View>
+        );
+    }
+};
+
+
+// https://blog.reactnativecoach.com/creating-draggable-component-with-react-native-132d30c27cb0
+// https://facebook.github.io/react-native/docs/panresponder.html
 class JourneyManager extends Component {
 
-    state = { entries: [{color: 'blue'}, {color: 'green'}, {color: 'teal'}], one: null, two: null, three: null }
-
-    updateSlides = () => {
-      this.state.entries.shift();
-      this.state.entries.push({color: 'red'})
+    state = {
+        allProps: [
+            { key: 1, color: 'blue' },
+            { key: 2, color: 'teal' },
+            { key: 3, color: 'green' }
+        ],
+        dragging: false
     }
 
-    _renderItem = ({item, index}) => {
+    componentWillMount () {
+        // Initialize PanResponder with move handling
+        // https://facebook.github.io/react-native/docs/panresponder.html
+        this.panResponder = PanResponder.create({
+            onStartShouldSetPanResponder:   ( evnt, gestureState ) => { return true },
+            onPanResponderMove:             this.onDrag,
+            onPanResponderRelease:          this.endDrag,
+            // For other elments being entered. Keep it in for now
+            onPanResponderTerminate:        this.endDrag
+        });
+    }
 
-        var style   = {...styles.vid, backgroundColor: item.color},
-            onPress = function () {};
+    onDrag = ( evnt, gestureState ) => {
 
-        if ( item.color === 'teal' ) {
-          onPress = this.updateSlides;
+        // If already dragging, don't do anything
+        if ( this.state.dragging ) { return this; }
+
+        var gs = gestureState;
+
+        // If the gesture has moved far enough to be intentional
+        if ( Math.abs(gs.dx) > 75 ) {
+            // Move in the direction indicated by a negative or
+            // positive movement (left or right)
+            var sign = gs.dx < 0? -1:1
+            var newProps = this.swipeResult( sign );
+            this.setState({ allProps: newProps, dragging: true });
         }
 
-        var thing = <TouchableOpacity style={style} onPress={onPress}>
-                <Text>{ viewportWidth }</Text>
-            </TouchableOpacity>
+    }
 
-        return (
-            thing
-        );
+    endDrag = () => { this.setState({ dragging: false }); }
+
+    swipeResult = ( toAdd ) => {
+    // Change the order of the items. In future, change video links as well for
+    // non-visible items.
+        var { allProps }    = this.state,
+            newAllProps     = [];
+
+        for ( var propsi = 0; propsi < allProps.length; propsi++ ) {
+            var props       = allProps[ propsi ],
+                newIndex    = modulo(propsi + toAdd, 3);
+            newAllProps[ newIndex ] = props;
+        }
+
+        return newAllProps;
     }
 
     render () {
+
+        var { allProps }    = this.state,
+            // Can't spread and add props at same time inside JSX here
+            one             = {...allProps[0], index: 0 },
+            two             = {...allProps[1], index: 1 },
+            three           = {...allProps[2], index: 2 };
+
         return (
-            <Carousel
-              loop={true}
-              ref={(c) => { this._carousel = c; }}
-              data={this.state.entries}
-              renderItem={this._renderItem}
-              sliderWidth={viewportWidth}
-              itemWidth={viewportWidth} />
+            <View {...this.panResponder.panHandlers}>
+                <JourneyVid {...one} />
+                <JourneyVid {...two} />
+                <JourneyVid {...three} />
+            </View>
         );
     }
 }
 
 export {
-    JourneyManager
+    JourneyManager,
+    JourneyVid
 }
