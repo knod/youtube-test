@@ -15,7 +15,7 @@ const styles = {
     vid:        { width: viewportWidth, height: viewportHeight - 20, marginTop: 20, position: 'absolute' },
     left:       { top: -1 * halfHeight, left: -3 * halfWidth },
     center:     { top: -1 * halfHeight, left: -1 * halfWidth },
-    right:      { top: -1 * halfHeight, left: 3 * halfWidth }
+    right:      { top: -1 * halfHeight, left: 3 * halfWidth },
 };
 
 var indexToPos = {
@@ -34,7 +34,15 @@ class JourneyVid extends Component {
         var style = {...styles.vid, ...styles[ posKey ], backgroundColor: color}
         return (
             <Animated.View style={style}>
-                <Text>{ count }</Text>
+                <WebView
+                    ref={'webview'}
+                    automaticallyAdjustContentInsets={false}
+                    source={{uri: this.props.url}}
+                    javaScriptEnabled={true}
+                    domStorageEnabled={true}
+                    decelerationRate='normal'
+                    startInLoadingState={true} />
+                <Text style={{position: 'absolute', height: 300, width: 300, top: 0, 'z-index': 100000000000000000000}}> {count} </Text>
             </Animated.View>
         );
     }
@@ -47,9 +55,9 @@ class JourneyManager extends Component {
 
     state = {
         allProps: [
-            { key: 1, color: 'blue' },
-            { key: 2, color: 'teal' },
-            { key: 3, color: 'green' }
+            { key: 1, color: 'blue', url: 'https://www.youtube.com/watch?v=43w7rcYPUnI' },
+            { key: 2, color: 'teal', url: 'https://www.youtube.com/watch?annotation_id=annotation_228595337&feature=iv&src_vid=ZWib5olGbQ0&v=XIOoCKO-ybQ' },
+            { key: 3, color: 'green', url: 'https://www.youtube.com/watch?v=kCSzjExvbTQ' }
         ],
         dragging: false
     }
@@ -62,7 +70,12 @@ class JourneyManager extends Component {
             onPanResponderMove:             this.onDrag,
             onPanResponderRelease:          this.endDrag,
             // For other elments being entered. Keep it in for now
-            onPanResponderTerminate:        this.endDrag
+            onPanResponderTerminate:        this.endDrag,
+            onShouldBlockNativeResponder: (evt, gestureState) => {
+                // Returns whether this component should block native components from becoming the JS
+                // responder. Returns true by default. Is currently only supported on android.
+                return true;
+            },
         });
     }
 

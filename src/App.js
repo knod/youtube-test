@@ -7,7 +7,6 @@ import { JourneyManager } from './Containers/JourneyManager';
 
 
 export default class App extends React.Component {
-        // <Journeys style={{flex: 1}}/>
   render() {
     return (
       <View id={'webRoot'} style={styles.container}>
