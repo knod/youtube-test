@@ -37,7 +37,9 @@ class JourneyVid extends Component {
                 <WebView
                     ref={'webview'}
                     automaticallyAdjustContentInsets={false}
-                    source={{uri: this.props.url}}
+                    // source={{uri: 'https://www.youtube.com/embed/43w7rcYPUnI'}}
+                    source={{uri: 'https://www.youtube.com/watch?v=43w7rcYPUnI'}}
+                    // source={{html: '<iframe width="1347" height="503" src="https://www.youtube.com/embed/43w7rcYPUnI" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>', baseUrl: "https://www.youtube.com/embed/43w7rcYPUnI"}}
                     javaScriptEnabled={true}
                     domStorageEnabled={true}
                     decelerationRate='normal'
@@ -48,16 +50,16 @@ class JourneyVid extends Component {
     }
 };
 
-
+// <iframe width="1347" height="503" src="https://www.youtube.com/embed/43w7rcYPUnI" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 // https://blog.reactnativecoach.com/creating-draggable-component-with-react-native-132d30c27cb0
 // https://facebook.github.io/react-native/docs/panresponder.html
 class JourneyManager extends Component {
 
     state = {
         allProps: [
-            { key: 1, color: 'blue', url: 'https://www.youtube.com/watch?v=43w7rcYPUnI' },
-            { key: 2, color: 'teal', url: 'https://www.youtube.com/watch?annotation_id=annotation_228595337&feature=iv&src_vid=ZWib5olGbQ0&v=XIOoCKO-ybQ' },
-            { key: 3, color: 'green', url: 'https://www.youtube.com/watch?v=kCSzjExvbTQ' }
+            { key: 1, color: 'blue', url: 'https://www.youtube.com/embed/43w7rcYPUnI' },
+            // { key: 2, color: 'teal', url: 'https://www.youtube.com/watch?annotation_id=annotation_228595337&feature=iv&src_vid=ZWib5olGbQ0&v=XIOoCKO-ybQ' },
+            // { key: 3, color: 'green', url: 'https://www.youtube.com/watch?v=kCSzjExvbTQ' }
         ],
         dragging: false
     }
