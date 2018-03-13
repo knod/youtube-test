@@ -41,8 +41,8 @@ class JourneyVid extends Component {
                     javaScriptEnabled={true}
                     domStorageEnabled={true}
                     decelerationRate='normal'
-                    startInLoadingState={true} />
-                <Text style={{position: 'absolute', height: 300, width: 300, top: 0, 'z-index': 100000000000000000000}}> {count} </Text>
+                    startInLoadingState={true}
+                    style={{zIndex: -1, position: 'absolute'}} />
             </Animated.View>
         );
     }
