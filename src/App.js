@@ -1,8 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, WebView } from 'react-native';
 
 // ROUTES
-import { Journeys } from './Containers/Journeys';
 import { JourneyManager } from './Containers/JourneyManager';
 
 
@@ -21,7 +20,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     backgroundColor: '#fff',
-    alignItems: 'center',
+    // alignItems: 'center',
     justifyContent: 'center',
   },
 });
